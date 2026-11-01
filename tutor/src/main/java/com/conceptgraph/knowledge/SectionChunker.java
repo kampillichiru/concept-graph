@@ -21,7 +21,6 @@ public final class SectionChunker {
 
         for (String line : note.body().split("\\R")) {
             if (line.startsWith("## ")) {
-            	System.out.println("line:"+line);
                 addIfNotEmpty(chunks, note, section, text);
                 section = line.substring(3).strip();
                 text.setLength(0);
