@@ -1,0 +1,108 @@
+### =====================================================================
+### POC 2: Embeddings and similarity. Requests in learning order.
+###
+### HOW TO USE
+###   1. Start the app (Eclipse: run TutorApplication, or java -jar tutor/target/tutor.jar).
+###      Ollama must be running with nomic-embed-text (check: ollama list).
+###   2. Open this file in one of these:
+###        - IntelliJ IDEA (built-in HTTP Client): click the green arrow next to a request
+###        - VS Code + "REST Client" extension: click "Send Request" above a request
+###      Eclipse has no .http runner. Use Swagger (http://localhost:8080/swagger-ui.html)
+###      with the same values, or copy the URL into a browser (all requests are GET).
+###   3. Run the requests TOP TO BOTTOM. Each one builds on the one before.
+###      Before moving on, read the "Observe" line and say the takeaway in one sentence.
+###
+### NOTES
+###   - "+" in a URL means a space. "%3F" means "?".
+###   - The first request that uses the 15 test sentences takes about 1 s more: it embeds them once.
+### =====================================================================
+
+@host = http://localhost:8080
+
+
+### ---------------------------------------------------------------------
+### STEP 1 (POC 2.1): What is an embedding?
+### Observe: 768 numbers, vectorLength ~1.0, ~90 ms (a chat answer takes ~5 s).
+### Takeaway: text becomes numbers. One number alone means nothing.
+### ---------------------------------------------------------------------
+GET {{host}}/poc02/embed?text=An+AI+agent+uses+tools+to+complete+tasks.
+
+### STEP 1b: a completely different text. The numbers look just as random.
+GET {{host}}/poc02/embed?text=Pasta+needs+boiling+salted+water.
+
+
+### ---------------------------------------------------------------------
+### STEP 2 (POC 2.1): Compare two texts with cosine similarity
+### Observe: the hand-written cosine equals LangChain4j's (0.6759).
+### Takeaway: cosine = "do the two vectors point the same way?" Higher = closer meaning.
+### ---------------------------------------------------------------------
+GET {{host}}/poc02/similarity
+
+### STEP 2b: similar meaning, different words. Expect a fairly high score.
+GET {{host}}/poc02/similarity?a=I+love+cricket&b=I+enjoy+playing+sports
+
+### STEP 2c: unrelated. Expect lower, but NOT zero.
+GET {{host}}/poc02/similarity?a=I+love+cricket&b=Pasta+needs+boiling+salted+water.
+
+### STEP 2d: same words, opposite meaning. Does the model notice the "not"?
+GET {{host}}/poc02/similarity?a=The+movie+was+good&b=The+movie+was+not+good
+
+
+### ---------------------------------------------------------------------
+### STEP 3 (POC 2.1): Hand-picked pairs, including a surprise
+### Observe: "Java" language vs "Java" island = 0.745, HIGHER than real synonyms (0.676).
+### Takeaway: embeddings capture meaning well, but not perfectly. Shared words still pull scores up.
+### ---------------------------------------------------------------------
+GET {{host}}/poc02/pairs
+
+
+### ---------------------------------------------------------------------
+### STEP 4 (POC 2.2): Every sentence against every other sentence
+### Observe: the "Score range" line at the bottom: min ~0.29, mean ~0.45, max ~0.75.
+### Takeaway: even unrelated texts score ~0.3, so "0.5 = similar" means nothing.
+###           Only the RANKING counts (and each model has its own range).
+### ---------------------------------------------------------------------
+GET {{host}}/poc02/matrix
+
+
+### ---------------------------------------------------------------------
+### STEP 5 (POC 2.3): Semantic search vs keyword search (THE key lesson)
+### Observe: compare "semantic" with "keyword" in each answer.
+### Takeaway: keyword search matches words; semantic search matches meaning.
+###           This is why RAG (POC 3) uses embeddings.
+### ---------------------------------------------------------------------
+
+### 5a: semantic search also finds "I drink a cup of java"; keyword search finds only "coffee beans".
+GET {{host}}/poc02/search?query=coffee&k=3
+
+### 5b: keyword search finds NOTHING ("autonomously" is not "autonomous").
+GET {{host}}/poc02/search?query=software+that+works+autonomously&k=3
+
+### 5c: semantic search finds both islands; keyword search finds only Bali.
+GET {{host}}/poc02/search?query=holiday+destinations&k=3
+
+### 5d: semantic search finds vector database, RAG and embeddings; keyword search matches only "text".
+GET {{host}}/poc02/search?query=how+do+I+find+similar+text%3F&k=3
+
+### 5e: your turn. Ask with words that appear in NO sentence.
+GET {{host}}/poc02/search?query=tasty+Italian+dinner&k=3
+
+
+### ---------------------------------------------------------------------
+### STEP 6 (POC 2.4): Break it: nomic's task prefixes
+### Observe: with prefixes, S3 scores 0.762 (vs 0.658 without), and "Java island" drops from #2 to #3.
+### Takeaway: HOW you embed changes WHAT you find. Read the model card.
+### ---------------------------------------------------------------------
+GET {{host}}/poc02/prefixes
+
+### 6b: another question. Does the ranking change between the two lists?
+GET {{host}}/poc02/prefixes?query=What+is+an+AI+agent%3F&k=5
+
+
+### ---------------------------------------------------------------------
+### STEP 7 (POC 2.5): Architect numbers (cost and storage)
+### Observe: batchTotalMs < oneByOneTotalMs; bytesPerVector = 3072; storage for 1M vectors ~3 GB.
+### Takeaway: the numbers a customer asks about. They go into
+###           docs/artifacts/poc02-choosing-embedding-model.md
+### ---------------------------------------------------------------------
+GET {{host}}/poc02/embedding-stats

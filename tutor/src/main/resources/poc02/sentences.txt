@@ -1,0 +1,18 @@
+# POC 2 test sentences, one per line. Lines starting with # are ignored.
+# Chosen in groups: synonyms with no shared words, one word with several meanings,
+# related AI concepts, and unrelated baselines.
+An AI agent uses tools to complete tasks.
+An autonomous assistant plans steps and acts on its own.
+Java is a popular programming language for backend services.
+Spring Boot makes it easy to build Java microservices.
+Java is an island in Indonesia with many volcanoes.
+I drink a cup of java every morning.
+Embeddings turn text into vectors of numbers.
+A vector database stores embeddings and finds the nearest ones.
+RAG retrieves relevant documents and gives them to the LLM.
+Chunking splits long documents into smaller pieces.
+A knowledge graph connects concepts with relationships.
+Temperature controls how random the model's output is.
+Bali is a beautiful island for a beach holiday.
+How to cook pasta with tomato sauce.
+Coffee beans are roasted before brewing.

@@ -1,0 +1,40 @@
+# Every value can be overridden by an env var: ${ENV_VAR:default}
+conceptgraph:
+    ollama-base-url: ${OLLAMA_BASE_URL:http://localhost:11434}
+    chat-model: ${CHAT_MODEL:qwen2.5:3b}
+    # embedding model: turns text into vectors (POC 2+)
+    embed-model: ${EMBED_MODEL:nomic-embed-text}
+    # CPU-only laptop: a 7b answer can take minutes
+    chat-timeout: ${CHAT_TIMEOUT:300s}
+    # true = log the raw JSON sent to and received from Ollama
+    log-requests: ${LOG_REQUESTS:false}
+    # vector database (POC 3+): Qdrant's gRPC port is 6334 (REST on 6333)
+    qdrant-host: ${QDRANT_HOST:localhost}
+    qdrant-port: ${QDRANT_PORT:6334}
+    # folder that contains concepts/*.md (run from the repo root, or set KNOWLEDGE_BASE_DIR)
+    knowledge-base-dir: ${KNOWLEDGE_BASE_DIR:knowledge-base}
+
+server:
+    port: ${SERVER_PORT:8080}
+
+spring:
+    application:
+        name: conceptgraph-tutor
+    mvc:
+        async:
+            # streaming responses run asynchronously; the default timeout is too short for CPU models
+            request-timeout: 300s
+
+springdoc:
+    swagger-ui:
+        path: /swagger-ui.html
+        tags-sorter: alpha # lessons appear in order: "POC 1.1 ...", "POC 1.2 ..."
+        operations-sorter: method
+        try-it-out-enabled: true # "Try it out" is on by default
+        display-request-duration: true # shows how long each LLM call took
+
+logging:
+    level:
+        llm-trace: INFO
+        # LangChain4j's HTTP request/response logging (only active when log-requests=true)
+        dev.langchain4j: INFO

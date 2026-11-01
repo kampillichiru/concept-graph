@@ -1,0 +1,62 @@
+### POC 1 requests. Open in IntelliJ (HTTP Client) or VS Code (REST Client extension) and click "Send".
+### Start the app first: java -jar tutor/target/tutor.jar
+
+### Lesson 1a: same question, two system messages
+GET http://localhost:8080/poc01/messages
+
+### Lesson 1b: temperature 0 vs 0.8 (each asked twice)
+GET http://localhost:8080/poc01/temperature
+
+### Lesson 1c (break it): a framework that does not exist
+GET http://localhost:8080/poc01/made-up
+
+### Lesson 2a: blocking. Nothing arrives until the whole answer is ready
+GET http://localhost:8080/poc01/blocking
+
+### Lesson 2b: streaming. Best seen in a terminal: curl.exe -N http://localhost:8080/poc01/stream
+GET http://localhost:8080/poc01/stream
+
+### Lesson 3: structured output into a Java record
+GET http://localhost:8080/poc01/concept-card?concept=embeddings
+
+### Lesson 3 (break it): a made-up concept
+GET http://localhost:8080/poc01/concept-card?concept=Zorblax%20framework
+
+### Lesson 4: chat WITHOUT memory (then send the follow-up below)
+POST http://localhost:8080/poc01/chat/alice?memory=false
+Content-Type: text/plain
+
+What are embeddings?
+
+### Lesson 4: follow-up WITHOUT memory. What is "it"?
+POST http://localhost:8080/poc01/chat/alice?memory=false
+Content-Type: text/plain
+
+Give me an example of it.
+
+### Lesson 4: chat WITH memory
+POST http://localhost:8080/poc01/chat/alice
+Content-Type: text/plain
+
+What are embeddings?
+
+### Lesson 4: follow-up WITH memory
+POST http://localhost:8080/poc01/chat/alice
+Content-Type: text/plain
+
+Give me an example of it.
+
+### Lesson 4: another user has their own, empty memory
+POST http://localhost:8080/poc01/chat/bob
+Content-Type: text/plain
+
+Give me an example of it.
+
+### Lesson 4: what is stored for alice (re-sent to the model on every call)
+GET http://localhost:8080/poc01/chat/alice/memory
+
+### Lesson 4: forget alice's conversation
+DELETE http://localhost:8080/poc01/chat/alice/memory
+
+### Artifact: 3b vs 7b comparison (takes a few minutes), writes docs/artifacts/poc01-model-comparison.md
+GET http://localhost:8080/poc01/model-comparison?models=qwen2.5:3b,qwen2.5:7b

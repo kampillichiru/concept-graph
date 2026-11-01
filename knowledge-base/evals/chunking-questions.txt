@@ -1,0 +1,12 @@
+# Labelled questions for the chunking comparison (POC 3.6).
+# Format: question | concept id whose note answers it | a phrase the answer depends on
+# hit@k: the concept is in the top k chunks. keyword@k: the phrase is in the text of a top k chunk.
+# Keep this list small and stable: it is the yardstick for every chunking change.
+What does cosine similarity measure? | cosine-similarity | direction
+What is a hallucination? | hallucination | invented
+What does a temperature of 0 do? | temperature | repeatable
+How does hybrid search combine keyword and vector results? | hybrid-search | merges
+What does MERGE do in Cypher? | cypher | does not exist
+Why do we split notes into chunks? | chunking | small enough
+What is a context window? | tokens-and-context-window | maximum number of tokens
+How does reciprocal rank fusion score a document? | reciprocal-rank-fusion | k + rank
