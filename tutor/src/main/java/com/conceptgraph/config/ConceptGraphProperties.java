@@ -17,5 +17,9 @@ public record ConceptGraphProperties(
         boolean logRequests,
         String qdrantHost,
         int qdrantPort,
-        String knowledgeBaseDir) {
+        String knowledgeBaseDir,
+        String langsmithApiKey,
+        String langsmithProject,
+        String langsmithOtlpEndpoint,
+        String traceFile) {
 }

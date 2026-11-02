@@ -41,6 +41,23 @@
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-qdrant</artifactId>
         </dependency>
+        <!-- Pinned to match the Qdrant server (1.19.x). langchain4j-qdrant pulls in 1.17.0 transitively, which
+             the server rejects with a warning. Keep this within one minor version of the server. -->
+        <dependency>
+            <groupId>io.qdrant</groupId>
+            <artifactId>client</artifactId>
+            <version>1.19.0</version>
+        </dependency>
+
+        <!-- OpenTelemetry (POC 4): the SDK creates spans; the OTLP exporter sends them to LangSmith when a key is set. -->
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-sdk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.opentelemetry</groupId>
+            <artifactId>opentelemetry-exporter-otlp</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

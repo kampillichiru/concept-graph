@@ -8,3 +8,6 @@ target/
 
 # Local runtime data
 *.log
+
+# Trace output (POC 4)
+traces/

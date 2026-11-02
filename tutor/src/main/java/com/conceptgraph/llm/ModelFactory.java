@@ -1,6 +1,8 @@
 package com.conceptgraph.llm;
 
 import com.conceptgraph.config.ConceptGraphProperties;
+import com.conceptgraph.tracing.TracingChatModelListener;
+import com.conceptgraph.tracing.TracingEmbeddingModelListener;
 import dev.langchain4j.model.chat.Capability;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.StreamingChatModel;
@@ -25,9 +27,14 @@ public class ModelFactory {
 
     private final ConceptGraphProperties props;
     private final LoggingChatModelListener listener = new LoggingChatModelListener();
+    private final TracingChatModelListener tracingChat;
+    private final TracingEmbeddingModelListener tracingEmbedding;
 
-    public ModelFactory(ConceptGraphProperties props) {
+    public ModelFactory(ConceptGraphProperties props, TracingChatModelListener tracingChat,
+                        TracingEmbeddingModelListener tracingEmbedding) {
         this.props = props;
+        this.tracingChat = tracingChat;
+        this.tracingEmbedding = tracingEmbedding;
     }
 
     public String defaultModelName() {
@@ -48,7 +55,7 @@ public class ModelFactory {
                 .supportedCapabilities(Capability.RESPONSE_FORMAT_JSON_SCHEMA)
                 .logRequests(props.logRequests())
                 .logResponses(props.logRequests())
-                .listeners(List.of(listener))
+                .listeners(List.of(listener, tracingChat))
                 .build();
     }
 
@@ -72,6 +79,7 @@ public class ModelFactory {
                 .timeout(props.chatTimeout())
                 .logRequests(props.logRequests())
                 .logResponses(props.logRequests())
+                .listeners(List.of(tracingEmbedding))
                 .build();
     }
 }
