@@ -141,19 +141,21 @@ Without a key, everything stays on this laptop. To send the same spans to LangSm
    LANGSMITH_PROJECT=conceptgraph
    ```
 3. Start the app. Spans are sent in batches to `LANGSMITH_OTLP_ENDPOINT`
-   (default `https://api.smith.langchain.com/otel/v1/traces`) with the `x-api-key` header.
+   (default `https://api.smith.langchain.com/otel/v1/traces`) with the `x-api-key` header. If your account is on
+   the APAC host, set `LANGSMITH_OTLP_ENDPOINT=https://apac.api.smith.langchain.com/otel/v1/traces` as well. With the
+   wrong region, every key gets a 403.
 4. In LangSmith, open the project `conceptgraph`. Each question appears as one trace.
 
-**Status (live test, 2026-11-02):** the app reads the key and exports spans, but LangSmith answers
-`403 Forbidden` to the OTLP export. The same key is also refused by LangSmith's regular REST API
-(`/api/v1/sessions`), on both the US and EU hosts. So the key itself is rejected, not the trace format.
-The key has the right shape (`lsv2_` prefix, no quotes or spaces). Most likely it was revoked or deleted,
-or it belongs to another organization or workspace. The fix is a new key from **Settings → API Keys** in
-the workspace where you want the traces. Then set it again and restart the app.
+**Status (live test, 2026-11-02): done.** The trace reached LangSmith.
 
-**What the failure looks like in the app:** the question still returns 200 with the answer, and the trace is
-still in `/poc04/traces`. The only sign is a `WARN` line in the log: `Failed to export spans ... HTTP status code 403`.
-Tracing never breaks the request, but nothing reaches LangSmith.
+- **The region matters.** The account lives on the APAC host. With the US endpoint, every key was refused with
+  `403`, including new keys from the same workspace. Setting `LANGSMITH_OTLP_ENDPOINT` to
+  `https://apac.api.smith.langchain.com/otel/v1/traces` fixed it. The endpoint is the full export URL, including `/v1/traces`.
+- **How I checked:** the app answered one question, and the `conceptgraph` project on the APAC host listed the
+  run tree: `poc04.ask` → `rag.answer` → `rag.retrieve` (`embed`, `qdrant.search`) and `chat`, with no errors.
+- **What the failure looked like before:** the question still returned 200 with the answer, and the trace was
+  still in `/poc04/traces`. The only sign was a `WARN` in the log: `Failed to export spans ... HTTP status code 403`.
+  Tracing never breaks the request, but nothing reaches LangSmith.
 
 ## 9. Learnings from the live run
 
@@ -172,5 +174,5 @@ Tracing never breaks the request, but nothing reaches LangSmith.
 - [x] One RAG question appears as one trace with nested spans (`/poc04/ask` → `rag.answer` → `rag.retrieve`, `chat`).
 - [x] Each LLM call records its model, token counts, and finish reason.
 - [x] A failing call shows up as an ERROR span in the same tree.
-- [ ] The trace appears in LangSmith. Not done: needs a LangSmith key.
+- [x] The trace appears in LangSmith (APAC host, project `conceptgraph`).
 - [x] Architect artifact: [`docs/artifacts/poc04-llm-monitoring.md`](../artifacts/poc04-llm-monitoring.md).
