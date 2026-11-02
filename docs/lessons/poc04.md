@@ -144,8 +144,28 @@ Without a key, everything stays on this laptop. To send the same spans to LangSm
    (default `https://api.smith.langchain.com/otel/v1/traces`) with the `x-api-key` header.
 4. In LangSmith, open the project `conceptgraph`. Each question appears as one trace.
 
-**Status:** the endpoint answers `401` to a request without a key, so it is reachable. I have not sent real spans to
-LangSmith, because no key is set on this laptop. Check the first trace in LangSmith before relying on it.
+**Status (live test, 2026-11-02):** the app reads the key and exports spans, but LangSmith answers
+`403 Forbidden` to the OTLP export. The same key is also refused by LangSmith's regular REST API
+(`/api/v1/sessions`), on both the US and EU hosts. So the key itself is rejected, not the trace format.
+The key has the right shape (`lsv2_` prefix, no quotes or spaces). Most likely it was revoked or deleted,
+or it belongs to another organization or workspace. The fix is a new key from **Settings → API Keys** in
+the workspace where you want the traces. Then set it again and restart the app.
+
+**What the failure looks like in the app:** the question still returns 200 with the answer, and the trace is
+still in `/poc04/traces`. The only sign is a `WARN` line in the log: `Failed to export spans ... HTTP status code 403`.
+Tracing never breaks the request, but nothing reaches LangSmith.
+
+## 9. Learnings from the live run
+
+- **Tracing is best-effort.** An exporter failure logs a warning and the answer still comes back. Good for the
+  user, but it means a broken key looks like "it works" unless you check the log or the project.
+- **Check the key against the API before blaming the code.** One REST call tells you whether the key is valid.
+  `403` on both the REST API and the OTLP endpoint means the key, not the exporter.
+- **Environment variables need a fresh process.** `setx` saves the key for new terminals only. The running app
+  keeps what it was started with. Restart after changing a key.
+- **Use `$env:` in PowerShell and `%VAR%` in cmd.** Mixing them gives "syntax is incorrect" errors.
+- **Local tracing is the safety net.** `traces/spans.jsonl` and `/poc04/traces` still have the full tree while
+  LangSmith is unreachable. That's the reason the file exporter is always on.
 
 ## 8. Done when
 
