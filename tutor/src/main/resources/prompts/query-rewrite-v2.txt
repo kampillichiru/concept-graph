@@ -1,0 +1,9 @@
+A learner is searching their notes on AI engineering.
+Write the technical name of the concept the question is about, then 2 to 4 related technical terms.
+Reply with the terms only, on one line.
+
+Question: the trick where the model looks things up in my documents first
+Terms: retrieval-augmented generation RAG retrieval context
+
+Question: {{question}}
+Terms:

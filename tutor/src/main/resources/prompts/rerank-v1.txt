@@ -1,0 +1,9 @@
+Rank the passages by how well they answer the question.
+
+Question: {{question}}
+
+Passages:
+{{passages}}
+
+List the passage numbers from most to least relevant, separated by commas.
+Reply with the numbers only, for example: 3,1,2

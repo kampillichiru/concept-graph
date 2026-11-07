@@ -254,7 +254,7 @@ ConceptGraph/
 │   └── adr/                   architecture decision records
 ├── knowledge-base/
 │   ├── concepts/*.md          ~25 AI concept notes (the data)
-│   └── evals/golden-set.json  questions with expected concepts
+│   └── evals/golden-set.txt   questions with expected concepts
 ├── graph-server/              Maven module: embedded Neo4j (POC 6)
 └── tutor/                     Maven module: all lessons and the tutor app
 ```

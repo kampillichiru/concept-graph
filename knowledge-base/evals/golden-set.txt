@@ -1,0 +1,28 @@
+# Golden set for retrieval (POC 5.5). 20 questions, each with the ONE concept whose note answers it.
+# Format: question | expected concept id | kind
+# kind:
+#   exact       uses a rare term or acronym that appears in the note (RRF, k1, pgvector). Keyword search's home turf.
+#   paraphrase  says the same thing in other words, with few shared words. Vector search's home turf.
+#   vague       how a learner actually asks before they know the name of the thing. Query rewriting's target.
+# Metrics: hit@k = the expected concept is in the top k chunks. MRR = mean of 1 / rank of the first such chunk.
+# Rules: never edit a question to make a method look better. Add questions; don't tune the old ones.
+What is RRF? | reciprocal-rank-fusion | exact
+What are the k1 and b parameters? | bm25 | exact
+What does MERGE do? | cypher | exact
+What is MCP? | mcp | exact
+What is ReAct? | ai-agent | exact
+Is pgvector an option? | vector-database | exact
+What is @SystemMessage for? | system-vs-user-messages | exact
+Why does the model sometimes make things up? | hallucination | paraphrase
+How does the app remember what I said earlier in the conversation? | chat-memory | paraphrase
+How do I get the same answer every time I ask? | temperature | paraphrase
+How do I get JSON back from the model instead of free text? | structured-output | paraphrase
+Can a document trick the model into ignoring its rules? | prompt-injection | paraphrase
+How can I check that an answer really comes from my sources? | grounding-and-citations | paraphrase
+How does the model ask my code to run a function? | tool-calling | paraphrase
+How much text can I send in one request? | tokens-and-context-window | paraphrase
+How do I measure whether two vectors point the same way? | cosine-similarity | paraphrase
+Should I cut my documents by headings or by length? | chunking | paraphrase
+that graph thing with LLMs | graph-rag | vague
+the second pass that sorts search results again | reranking | vague
+the loop where the model keeps picking actions until it is done | ai-agent | vague

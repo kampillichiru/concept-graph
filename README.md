@@ -87,4 +87,7 @@ endpoints (`/poc01/...`): click **Try it out** → **Execute**. Alternatives:
 | 0 | Design: use case, architecture, roadmap | ✅ done |
 | 1 | Talk to an LLM with LangChain4j ([lesson](docs/lessons/poc01.md)) | ✅ done |
 | 2 | Embeddings and similarity ([lesson](docs/lessons/poc02.md)) | ✅ done |
-| 3–14 | See [docs/roadmap.md](docs/roadmap.md) | ⏳ not started |
+| 3 | Vector database (Qdrant) and basic RAG ([lesson](docs/lessons/poc03.md)) | ✅ done |
+| 4 | Observability with LangSmith ([lesson](docs/lessons/poc04.md)) | ✅ done |
+| 5 | Advanced RAG: BM25, hybrid, rewriting, reranking ([lesson](docs/lessons/poc05.md)) | ✅ done |
+| 6–14 | See [docs/roadmap.md](docs/roadmap.md) | ⏳ not started |

@@ -1,0 +1,7 @@
+Turn the question into search keywords for notes about AI engineering
+(LLMs, embeddings, RAG, vector databases, keyword search, knowledge graphs, agents, MCP).
+Name the technical terms the user probably means.
+Reply with the keywords only, on one line, at most 8 words.
+
+Question: {{question}}
+Keywords:

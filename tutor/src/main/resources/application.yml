@@ -14,9 +14,9 @@ conceptgraph:
     # folder that contains concepts/*.md (run from the repo root, or set KNOWLEDGE_BASE_DIR)
     knowledge-base-dir: ${KNOWLEDGE_BASE_DIR:knowledge-base}
     # tracing (POC 4). Without a key, traces stay on this laptop (the trace file below).
-    langsmith-api-key: ${LANGSMITH_API_KEY:}
-    langsmith-project: ${LANGSMITH_PROJECT:conceptgraph}
-    langsmith-otlp-endpoint: ${LANGSMITH_OTLP_ENDPOINT:https://api.smith.langchain.com/otel/v1/traces}
+    langsmith-api-key: ${LANGSMITH-API-KEY}
+    langsmith-project: ${LANGSMITH-PROJECT}
+    langsmith-otlp-endpoint: https://apac.api.smith.langchain.com/otel/v1/traces
     # one JSON object per finished span, appended on every run
     trace-file: ${TRACE_FILE:traces/spans.jsonl}
 
