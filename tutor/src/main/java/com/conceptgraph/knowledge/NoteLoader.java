@@ -95,6 +95,8 @@ public class NoteLoader {
                 Integer.parseInt(meta.getOrDefault("level", "1")),
                 parseList(meta.get("requires")),
                 parseList(meta.get("related")),
+                parseList(meta.get("alternative_to")),
+                parseList(meta.get("part_of")),
                 body);
     }
 

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!--
+        Deliberately NOT a child of the Spring Boot parent. Neo4j's web stack (Jersey 2, Jetty 12, javax.validation)
+        is pinned by Neo4j's own build, and Spring Boot's BOM rewrites many of those versions (Jersey 4, jakarta.ws.rs 4)
+        and breaks startup. This module is a plain Java program: it gets Neo4j's dependencies as Neo4j resolves them,
+        and nothing from Spring leaks in. The architecture rule for this module: keep it apart from tutor.
+    -->
+    <groupId>com.conceptgraph</groupId>
+    <artifactId>graph-server</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <name>ConceptGraph graph-server</name>
+    <description>Neo4j running inside a Java process, with Bolt on port 7687. Plain Java, no Spring.</description>
+
+    <properties>
+        <maven.compiler.release>25</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <!--
+            The in-process Neo4j server: a real Neo4j database with the Bolt and HTTP connectors switched on.
+            The "harness" is Neo4j's own embedding API (it is also used for tests; here we use it as a server).
+            Pinned to 5.26, the LTS line. The tutor's driver (Spring Boot managed) talks to it over Bolt.
+        -->
+        <dependency>
+            <groupId>org.neo4j.test</groupId>
+            <artifactId>neo4j-harness</artifactId>
+            <version>5.26.33</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>graph-server</finalName>
+        <plugins>
+            <!--
+                One runnable jar: java -jar graph-server/target/graph-server.jar
+                ServicesResourceTransformer merges META-INF/services files; Neo4j finds its extensions through them,
+                so a plain jar merge would silently lose them.
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.6.2</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.conceptgraph.graphserver.GraphServer</mainClass>
+                                    <!-- Neo4j loads native libraries through JNA; this silences the JDK 25 warning for java -jar -->
+                                    <manifestEntries>
+                                        <Enable-Native-Access>ALL-UNNAMED</Enable-Native-Access>
+                                    </manifestEntries>
+                                </transformer>
+                            </transformers>
+                            <filters>
+                                <!-- Signed jars from dependencies break when repackaged -->
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

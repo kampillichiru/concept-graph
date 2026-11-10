@@ -13,5 +13,7 @@ public record ConceptNote(
         int level,
         List<String> requires,
         List<String> related,
+        List<String> alternativeTo,
+        List<String> partOf,
         String body) {
 }

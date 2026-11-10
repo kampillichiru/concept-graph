@@ -21,5 +21,6 @@ public record ConceptGraphProperties(
         String langsmithApiKey,
         String langsmithProject,
         String langsmithOtlpEndpoint,
-        String traceFile) {
+        String traceFile,
+        String neo4jUri) {
 }

@@ -90,4 +90,5 @@ endpoints (`/poc01/...`): click **Try it out** → **Execute**. Alternatives:
 | 3 | Vector database (Qdrant) and basic RAG ([lesson](docs/lessons/poc03.md)) | ✅ done |
 | 4 | Observability with LangSmith ([lesson](docs/lessons/poc04.md)) | ✅ done |
 | 5 | Advanced RAG: BM25, hybrid, rewriting, reranking ([lesson](docs/lessons/poc05.md)) | ✅ done |
-| 6–14 | See [docs/roadmap.md](docs/roadmap.md) | ⏳ not started |
+| 6 | Knowledge graph in Neo4j, embedded ([lesson](docs/lessons/poc06.md)); needs `graph-server` running | ✅ done |
+| 7–14 | See [docs/roadmap.md](docs/roadmap.md) | ⏳ not started |

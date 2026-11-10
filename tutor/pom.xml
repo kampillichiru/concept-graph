@@ -49,6 +49,12 @@
             <version>1.19.0</version>
         </dependency>
 
+        <!-- Neo4j driver (POC 6): the Bolt client for graph-server. Version managed by Spring Boot. Only the graph package uses it. -->
+        <dependency>
+            <groupId>org.neo4j.driver</groupId>
+            <artifactId>neo4j-java-driver</artifactId>
+        </dependency>
+
         <!-- OpenTelemetry (POC 4): the SDK creates spans; the OTLP exporter sends them to LangSmith when a key is set. -->
         <dependency>
             <groupId>io.opentelemetry</groupId>

@@ -19,8 +19,9 @@
     <name>ConceptGraph (parent)</name>
 
     <modules>
+        <!-- Neo4j in its own JVM (POC 6). Kept out of tutor's classpath: Neo4j brings its own libraries. -->
+        <module>graph-server</module>
         <module>tutor</module>
-        <!-- graph-server is added in POC 6 -->
     </modules>
 
     <properties>
